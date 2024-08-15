@@ -1,0 +1,26 @@
+{
+  "name": "honest-cookies",
+  "version": "1.0.0",
+  "description": "A function component which provides honest cookies to the user",
+  "main": "cookieModal.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viktorrn-packages/honest-cookies.git"
+  },
+  "keywords": [
+    "modal"
+  ],
+  "author": "viktorrn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/viktorrn-packages/honest-cookies/issues"
+  },
+  "homepage": "https://github.com/viktorrn-packages/honest-cookies#readme",
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

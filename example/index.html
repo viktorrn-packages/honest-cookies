@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Empty Webpage</title>
+</head>
+<body>
+    <script type="module">
+    
+        import { showCookieModal } from "../src/index.js";
+
+        window.onload = () => {
+            showCookieModal({
+                title: 'Cookie Policy',
+                description: `This website uses cookies to ensure you get the "best possible experience" on our website.`,
+                options: [
+                    {
+                        title: 'Necessary',
+                        description: 'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms.',
+                        checked: true,
+                    },
+                    {
+                        title: 'Statistics',
+                        description: 'These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site. They help us to know which pages are the most and least popular and see how visitors move around the site.',
+                        checked: true,
+                    },
+                    {
+                        title: 'Marketing',
+                        description: 'These cookies may be set through our site by our advertising partners. They may be used by those companies to build a profile of your interests and show you relevant adverts on other sites.',
+                        checked: false,
+                    },
+                ],
+                linkMessage: 'Read more about our privacy policy and cookies',
+                link: 'https://www.google.com',
+            });
+        };
+        // Your JavaScript code goes here
+    </script>
+    
+</body>
+</html>
