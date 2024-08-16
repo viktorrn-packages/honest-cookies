@@ -12,7 +12,11 @@ export interface CookieModalSettings {
   options: CookieModalSettingOption[];
   linkMessage: string;
   link: string;
+  games: game[];
 }
+
+type game = ((gameDoneCallBack: (won: boolean) => void) => void);
+
 
 function getStartBody(settings: CookieModalSettings) {
   var cookieModal = document.createElement('dialog');
@@ -40,14 +44,6 @@ export function showCookieModal(settings: CookieModalSettings) {
     });
 
     document?.getElementById('manageCookies')?.addEventListener('click', () => {
-      
-      
-      const startPage = document?.getElementById('modalOptionButtons');
-      if(!startPage) {
-        return;
-      }
-      startPage.style.visibility = 'hidden';
-
       const showMore = (keyValue: string) => {
         if(!keyValue) return;
         const description = document?.getElementById(`description-${keyValue}`);
@@ -74,6 +70,16 @@ export function showCookieModal(settings: CookieModalSettings) {
         }
       }
 
+      const onChangeInput = (e: any, games: game[]) => {
+        if(!e.target.checked) {
+          const gameIndex = Math.floor(Math.random() * games.length);
+          console.log(gameIndex, games);
+          games[gameIndex]((won: boolean)=>{
+           e.target.checked = !won; 
+          });
+        }
+      }
+
       let newBody = document.createElement('div');
       newBody.id = 'modalCookiesOptions';
 
@@ -83,10 +89,13 @@ export function showCookieModal(settings: CookieModalSettings) {
       newBody.appendChild(closeButton);
     
       settings.options.forEach((option) => {
+
         const optionElement = document.createElement('div');
         optionElement.innerHTML = `
-          <input type="checkbox" id="${option.keyValue}" name="${option.keyValue}" value="${option.keyValue}" ${option.checked ? "checked" : ""} ${option.cannotChange ? "disabled" : ""}>
-          <label for="${option.keyValue}">${option.title}</label>
+        <div style="align-items: center;">
+          <input type="checkbox" id="input-${option.keyValue}" name="${option.keyValue}" value="${option.keyValue}" ${option.checked ? "checked" : ""} ${option.cannotChange ? "disabled" : ""}>
+          <label for="input-${option.keyValue}">${option.title}</label>
+        </div>
           <p id="read-more-${option.keyValue}" >Read more</p>
           <p style="display: none;" id="read-less-${option.keyValue}">Read less</p>
           <p style="display: none;" class="description" id="description-${option.keyValue}">${option.description}</p>
@@ -95,11 +104,20 @@ export function showCookieModal(settings: CookieModalSettings) {
       })
 
       cookieModal.innerHTML = newBody.outerHTML;
-      // Add click events 
+
+      cookieModal.innerHTML += `
+        <div id="modalOptionButtons"> 
+          <button id="acceptCookies">Accept All</button>
+          <button id="rejectCookies">Save preferences</button>
+        </div>
+        <a href="${settings.link}">${settings.linkMessage}</a>
+      `;
+
+      // Adding event listeners
       settings.options.forEach((option) => {
+        document?.getElementById(`input-${option.keyValue}`)?.addEventListener('change', (e: any) => onChangeInput(e,settings.games));
         document?.getElementById(`read-more-${option.keyValue}`)?.addEventListener('click', () => showMore(option.keyValue));
         document?.getElementById(`read-less-${option.keyValue}`)?.addEventListener('click', () => showLess(option.keyValue));
-
       });
 
       document?.getElementById('closeButton')?.addEventListener('click', () => {
@@ -107,6 +125,8 @@ export function showCookieModal(settings: CookieModalSettings) {
         showCookieModal(settings);
       });
       
+
+
     });
 
     cookieModal.showModal();

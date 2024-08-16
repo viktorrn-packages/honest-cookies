@@ -8,6 +8,20 @@
     <script type="module">
     
         import { showCookieModal } from "../src/index.js";
+        
+        function StupidRandomizer(onGameDone) {
+            console.log('Game started');
+            setTimeout(() => {
+                console.log('Game done');
+                const score = Math.floor(Math.random() * 100);
+                console.log('Score:', score);
+                if(score > 90) {
+                    onGameDone(true);
+                    return;
+                }
+                onGameDone(false);
+            }, 500);
+        }
 
         window.onload = () => {
             showCookieModal({
@@ -36,6 +50,9 @@
                 ],
                 linkMessage: 'Read more about our privacy policy and cookies',
                 link: 'https://www.google.com',
+                games: [
+                    StupidRandomizer,
+                ]
             });
         };
         // Your JavaScript code goes here
