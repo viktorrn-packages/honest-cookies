@@ -2,6 +2,8 @@ export interface CookieModalSettingOption {
   title: string;
   description: string;
   keyValue: string; 
+  checked: boolean;
+  cannotChange?: boolean;
 }
 
 export interface CookieModalSettings {
@@ -15,15 +17,15 @@ export interface CookieModalSettings {
 function getStartBody(settings: CookieModalSettings) {
   var cookieModal = document.createElement('dialog');
   cookieModal.id = 'cookieModal';
-  cookieModal.setAttribute('style', 'border: none; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 320px; padding: 20px; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);');
   cookieModal.innerHTML = `
     <h2>${settings.title}</h2> 
     <p>${settings.description}</p>
-    <div id="modalOptionButtons" style="padding-bottom: 16px;"> 
-      <button id="acceptCookies" style="padding: 8px 16px; margin: 0 16px 8px 0; border: none; border-radius: 4px; background-color: #007BFF; color: white; cursor: pointer;">Accept All</button>
-      <button id="manageCookies" style="padding: 8px 16px; border: none; border-radius: 4px; background-color: #007BFF; color: white; cursor: pointer;">Manage Cookies</button>
+    <div id="modalOptionButtons"> 
+      <button id="acceptCookies">Accept All</button>
+      <button id="rejectCookies">Attempt to Reject All</button>
+      <button id="manageCookies">Manage Cookies</button>
     </div>
-    <a href="${settings.link}" style="color: #007BFF; text-decoration: none;">${settings.linkMessage}</a>
+    <a href="${settings.link}">${settings.linkMessage}</a>
   `;
   return cookieModal;
 }
@@ -38,15 +40,73 @@ export function showCookieModal(settings: CookieModalSettings) {
     });
 
     document?.getElementById('manageCookies')?.addEventListener('click', () => {
-      let newBody = ``;
-      newBody += settings.options.map((option) => {
-        return `<div style="padding: 8px 0;"> 
-          <input type="checkbox" id="${option.keyValue}" name="${option.keyValue}" value="${option.keyValue}" checked>
+      
+      
+      const startPage = document?.getElementById('modalOptionButtons');
+      if(!startPage) {
+        return;
+      }
+      startPage.style.visibility = 'hidden';
+
+      const showMore = (keyValue: string) => {
+        if(!keyValue) return;
+        const description = document?.getElementById(`description-${keyValue}`);
+        const readMore = document?.getElementById(`read-more-${keyValue}`);
+        const readLess = document?.getElementById(`read-less-${keyValue}`);
+        
+        if(description && readMore && readLess) {
+          description.style.display = 'block';
+          readMore.style.display = 'none';
+          readLess.style.display = 'block';
+        }
+      }
+
+      const showLess = (keyValue: string) => {
+        if(!keyValue) return;
+        const description = document?.getElementById(`description-${keyValue}`);
+        const readMore = document?.getElementById(`read-more-${keyValue}`);
+        const readLess = document?.getElementById(`read-less-${keyValue}`);
+        
+        if(description && readMore && readLess) {
+          description.style.display = 'none';
+          readMore.style.display = 'block';
+          readLess.style.display = 'none';
+        }
+      }
+
+      let newBody = document.createElement('div');
+      newBody.id = 'modalCookiesOptions';
+
+      let closeButton = document.createElement('p');
+      closeButton.innerText = 'Close';
+      closeButton.id = 'closeButton';
+      newBody.appendChild(closeButton);
+    
+      settings.options.forEach((option) => {
+        const optionElement = document.createElement('div');
+        optionElement.innerHTML = `
+          <input type="checkbox" id="${option.keyValue}" name="${option.keyValue}" value="${option.keyValue}" ${option.checked ? "checked" : ""} ${option.cannotChange ? "disabled" : ""}>
           <label for="${option.keyValue}">${option.title}</label>
-          <p>${option.description}</p>
-          </div>`;
-      }).join('');
-      cookieModal.innerHTML = newBody; 
+          <p id="read-more-${option.keyValue}" >Read more</p>
+          <p style="display: none;" id="read-less-${option.keyValue}">Read less</p>
+          <p style="display: none;" class="description" id="description-${option.keyValue}">${option.description}</p>
+        `;  
+        newBody.appendChild(optionElement);
+      })
+
+      cookieModal.innerHTML = newBody.outerHTML;
+      // Add click events 
+      settings.options.forEach((option) => {
+        document?.getElementById(`read-more-${option.keyValue}`)?.addEventListener('click', () => showMore(option.keyValue));
+        document?.getElementById(`read-less-${option.keyValue}`)?.addEventListener('click', () => showLess(option.keyValue));
+
+      });
+
+      document?.getElementById('closeButton')?.addEventListener('click', () => {
+        cookieModal.remove();
+        showCookieModal(settings);
+      });
+      
     });
 
     cookieModal.showModal();

@@ -1,0 +1,56 @@
+#cookieModal a{
+    color: #00FB;
+    text-decoration: none;
+}
+
+#cookieModal{
+    border: none; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    width: 440px; 
+    padding: 20px;
+}
+
+#cookieModal > #modalOptionButtons {
+    padding-bottom: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#cookieModal button{
+    padding: 8px 16px; 
+    margin: 0 16px 8px 0; 
+    border: none; 
+    border-radius: 4px; 
+    background-color: #007BFF; 
+    color: white; 
+    cursor: pointer;
+}
+
+#cookieModal button:hover{
+    background-color: #0056b3;
+}
+
+#cookieModal #modalCookiesOptions{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+#cookieModal #modalCookiesOptions > div > p{
+    cursor: pointer; 
+    text-decoration: underline;
+}
+
+#cookieModal #modalCookiesOptions #closeButton{
+    text-align: right;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#cookieModal #modalCookiesOptions .description{
+    font-size: 16px;
+    color: #545353;
+    text-decoration: none; 
+    cursor: default;
+}

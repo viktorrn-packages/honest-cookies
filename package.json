@@ -1,11 +1,11 @@
 {
-  "name": "honest-cookies",
+  "name": "hardcore-cookies",
   "version": "1.0.0",
   "description": "A function component which provides honest cookies to the user",
   "main": "cookieModal.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "tsc -w"
+    "dev": "tsc -w"
   },
   "repository": {
     "type": "git",
