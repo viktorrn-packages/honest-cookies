@@ -73,10 +73,18 @@ export function showCookieModal(settings: CookieModalSettings) {
       const onChangeInput = (e: any, games: game[]) => {
         if(!e.target.checked) {
           const gameIndex = Math.floor(Math.random() * games.length);
-          console.log(gameIndex, games);
-          games[gameIndex]((won: boolean)=>{
+          const target = document.getElementById('modalGames');
+          const body = games[gameIndex]((won: boolean)=>{
            e.target.checked = !won; 
+           if(body != null && target){
+             target?.removeChild(body);
+             target.style.display = 'none';
+           }
           });
+          if(body != null && target) {
+            target.appendChild(body);
+            target.style.display = 'block';
+          }
         }
       }
 
@@ -111,6 +119,7 @@ export function showCookieModal(settings: CookieModalSettings) {
           <button id="rejectCookies">Save preferences</button>
         </div>
         <a href="${settings.link}">${settings.linkMessage}</a>
+        <div id="modalGames" style="position: fixed; background: #fff; width: 100%; height: 100%; top: 0; left: 0; display:none;"></div>
       `;
 
       // Adding event listeners
@@ -124,9 +133,6 @@ export function showCookieModal(settings: CookieModalSettings) {
         cookieModal.remove();
         showCookieModal(settings);
       });
-      
-
-
     });
 
     cookieModal.showModal();
